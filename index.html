@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Tiempos de Buceo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Buceo</h1>
+
+    <label for="ds">DS (Deja Superficie)</label>
+    <input type="datetime-local" id="ds">
+
+    <label for="llf">LLF (Llega al Fondo)</label>
+    <input type="datetime-local" id="llf">
+
+    <label for="df">DF (Deja Fondo)</label>
+    <input type="datetime-local" id="df">
+
+    <label for="llpseg">LLPSEG (Llega a Parada de Seguridad)</label>
+    <input type="datetime-local" id="llpseg">
+
+    <label for="seg">SEG (Tiempo de Parada de Seguridad en minutos)</label>
+    <input type="number" id="seg">
+
+    <label for="spseg">SPSEG (Sale de Parada de Seguridad)</label>
+    <input type="datetime-local" id="spseg">
+
+    <label for="lls">LLS (Llega a Superficie)</label>
+    <input type="datetime-local" id="lls">
+
+    <button onclick="calcularTiempos()">Calcular</button>
+
+    <div class="results" id="resultados"></div>
+  </div>
+
+  <script>
+    function calcularTiempos() {
+      const getTime = id => new Date(document.getElementById(id).value);
+
+      const DS = getTime("ds");
+      const DF = getTime("df");
+      const LLS = getTime("lls");
+
+      if (isNaN(DS) || isNaN(DF) || isNaN(LLS)) {
+        document.getElementById("resultados").innerText = "Por favor, complete todos los campos requeridos (DS, DF, LLS).";
+        return;
+      }
+
+      const TTF = (DF - DS) / 60000;  // Tiempo en fondo (minutos)
+      const TTD = (LLS - DF) / 60000; // Tiempo despresurización (minutos)
+      const TTB = (LLS - DS) / 60000; // Tiempo total de buceo (minutos)
+
+      document.getElementById("resultados").innerHTML = `
+        <p><strong>TTF</strong> (Tiempo Total en Fondo): ${TTF.toFixed(1)} minutos</p>
+        <p><strong>TTD</strong> (Tiempo Total Despresurización): ${TTD.toFixed(1)} minutos</p>
+        <p><strong>TTB</strong> (Tiempo Total de Buceo): ${TTB.toFixed(1)} minutos</p>
+      `;
+    }
+  </script>
+</body>
+</html>
